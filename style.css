@@ -24,7 +24,8 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: var(--font-body);
-    height: 100vh;
+    /* Use dynamic viewport height for mobile browsers addressing bar issues */
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -38,16 +39,22 @@ body {
     width: 100%;
     max-width: 800px;
     height: 100%;
-    max-height: 900px;
+    /* Ensure app takes full available height but respects padding */
+    max-height: 100%;
     position: relative;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .screen {
     display: none;
     flex-direction: column;
     height: 100%;
+    width: 100%;
     animation: fadeIn 0.5s ease;
+    /* Ensure content doesn't overflow container bounds unnecessarily */
+    overflow: hidden; 
 }
 
 .screen.active {
@@ -71,9 +78,10 @@ body {
     font-family: var(--font-heading);
     font-size: 3rem;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;
+    flex-shrink: 0;
 }
 
 .highlight {
@@ -83,7 +91,7 @@ body {
 
 .settings-panel {
     background: var(--panel-bg);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 20px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -91,14 +99,17 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     overflow-y: auto;
+    /* Ensure it doesn't overflow parent */
+    min-height: 0; 
 }
 
 .setting-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .setting-group label {
@@ -134,7 +145,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 .radio-group {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .radio-card {
@@ -151,11 +162,12 @@ input[type="range"]::-webkit-slider-thumb {
 .radio-card span {
     display: block;
     text-align: center;
-    padding: 10px;
+    padding: 8px 4px;
     background: #334155;
     border-radius: 10px;
     transition: all 0.2s;
     border: 2px solid transparent;
+    font-size: 0.9rem;
 }
 
 .radio-card input:checked+span {
@@ -168,13 +180,14 @@ input[type="range"]::-webkit-slider-thumb {
     margin-top: auto;
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     border: none;
-    padding: 1.2rem;
+    padding: 1rem;
     border-radius: 12px;
     color: white;
     font-size: 1.2rem;
     font-weight: 800;
     cursor: pointer;
     transition: transform 0.1s, filter 0.2s;
+    flex-shrink: 0;
 }
 
 .primary-btn:hover {
@@ -190,7 +203,8 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0.5rem 0 1rem 0;
+    flex-shrink: 0;
 }
 
 .level-info {
@@ -210,7 +224,8 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin: 20px 0;
+    margin-bottom: 1rem;
+    min-height: 0; /* Important for flex child scrolling/sizing */
 }
 
 .grid-row {
@@ -222,12 +237,12 @@ input[type="range"]::-webkit-slider-thumb {
 .grid-cell {
     flex: 1;
     background: var(--grid-bg);
-    border-radius: 15px;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4rem;
-    /* Icon size */
+    font-size: 3.5rem;
+    /* Responsive font size */
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
     transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -247,7 +262,7 @@ input[type="range"]::-webkit-slider-thumb {
 .grid-cell.active {
     background: var(--cell-active);
     box-shadow: 0 0 30px var(--cell-active);
-    transform: scale(1.05);
+    transform: scale(1.02);
     z-index: 10;
 }
 
@@ -274,8 +289,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 .controls {
     display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 0.5rem;
+    margin-top: auto;
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .control-btn {
@@ -288,6 +305,7 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 1rem;
 }
 
 .control-btn:hover {
@@ -319,7 +337,8 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 2rem;
     border-radius: 20px;
     text-align: center;
-    min-width: 300px;
+    width: 90%;
+    max-width: 400px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -354,11 +373,59 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
+    #app {
+        padding: 10px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+    
+    .logo {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .settings-panel {
+        padding: 1rem;
+        gap: 0.8rem;
+    }
+    
     .grid-cell {
         font-size: 2.5rem;
+        border-radius: 8px;
+    }
+    
+    .control-btn {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .game-header {
+        padding: 0.5rem 0;
+    }
+    
+    .level-info {
+        font-size: 1.2rem;
+    }
+    
+    .status-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-height: 700px) {
+    .logo {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .settings-panel {
+        padding: 0.8rem;
+    }
+    
+    .primary-btn {
+        padding: 0.8rem;
     }
 
-    .start-screen .logo {
+     .grid-cell {
         font-size: 2rem;
     }
 }
