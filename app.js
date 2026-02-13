@@ -276,6 +276,8 @@ class Game {
     scheduleBeat(beat, time) {
         if (this.currentLevel > this.params.totalLevels) return;
 
+        const level = this.currentLevel;
+
         // Audio
         this.audio.playA(time);
 
@@ -307,12 +309,13 @@ class Game {
         // Visuals Trigger
         const delay = (time - this.audio.getCurrentTime()) * 1000;
         setTimeout(() => {
-            this.handleVisuals(this.currentLevel, beat);
+            this.handleVisuals(level, beat);
         }, Math.max(0, delay));
     }
 
     handleVisuals(levelNum, beat) {
-        if (this.state !== 'PLAYING') return;
+        // Allow visuals to update if playing OR recently finished (for the last beat)
+        if (this.state !== 'PLAYING' && this.state !== 'FINISHED') return;
         if (levelNum > this.params.totalLevels) return;
 
         const levelData = this.data.levels[levelNum - 1];
@@ -364,14 +367,16 @@ class Game {
         this.statusText.innerText = '完成!';
         this.statusText.style.color = '#4ade80';
 
-        // Show End Screen
-        const overlay = document.getElementById('overlay');
-        const endModal = document.getElementById('end-modal');
-        const pauseModal = document.getElementById('pause-modal');
+        // Show End Screen with delay
+        setTimeout(() => {
+            const overlay = document.getElementById('overlay');
+            const endModal = document.getElementById('end-modal');
+            const pauseModal = document.getElementById('pause-modal');
 
-        overlay.classList.remove('hidden');
-        endModal.classList.remove('hidden');
-        pauseModal.classList.add('hidden');
+            overlay.classList.remove('hidden');
+            endModal.classList.remove('hidden');
+            pauseModal.classList.add('hidden');
+        }, 1000);
     }
 }
 
