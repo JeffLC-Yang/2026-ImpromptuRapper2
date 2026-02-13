@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>即興 Rapper 2</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Noto+Sans+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1 class="logo">即興 Rapper <span class="highlight">2</span></h1>
+
+            <div class="settings-panel">
+                <div class="setting-group">
+                    <label>拍子速度 (Level 1-5)</label>
+                    <div class="range-control">
+                        <input type="range" id="speed-input" min="1" max="5" value="2" step="1">
+                        <span id="speed-display">Level 2 (0.4s)</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label>關卡數 (5-20)</label>
+                    <div class="range-control">
+                        <input type="range" id="levels-input" min="5" max="20" value="10" step="1">
+                        <span id="levels-display">10 關</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label>圖案庫數量 (2-18)</label>
+                    <div class="range-control">
+                        <input type="range" id="pool-input" min="2" max="18" value="18" step="1">
+                        <span id="pool-display">18 種</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label>複雜度模式</label>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="complexity" value="fixed">
+                            <span>固定</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="complexity" value="increasing">
+                            <span>漸增</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="complexity" value="random" checked>
+                            <span>隨機</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group" id="fixed-count-group" style="display: none;">
+                    <label>每關圖案數 (2-8)</label>
+                    <div class="range-control">
+                        <input type="range" id="fixed-count-input" min="2" max="8" value="3" step="1">
+                        <span id="fixed-count-display">3 個</span>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="primary-btn">開始遊戲</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="level-info">Level <span id="current-level">1</span> / <span id="total-levels">10</span>
+                </div>
+                <div class="status-text" id="status-text">準備...</div>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-row top-row">
+                    <div class="grid-cell" data-index="0"></div>
+                    <div class="grid-cell" data-index="1"></div>
+                    <div class="grid-cell" data-index="2"></div>
+                    <div class="grid-cell" data-index="3"></div>
+                </div>
+                <div class="grid-row bottom-row">
+                    <div class="grid-cell" data-index="4"></div>
+                    <div class="grid-cell" data-index="5"></div>
+                    <div class="grid-cell" data-index="6"></div>
+                    <div class="grid-cell" data-index="7"></div>
+                </div>
+            </div>
+
+            <!-- Beat Visualizer (Optional visual aid) -->
+            <div class="beat-bar">
+                <div class="beat-indicator"></div>
+            </div>
+
+            <div class="controls">
+                <button id="pause-btn" class="control-btn">暫停</button>
+                <button id="restart-level-btn" class="control-btn">重來本局</button>
+                <button id="restart-game-btn" class="control-btn danger">回主選單</button>
+            </div>
+        </div>
+
+        <!-- Overlay for Paused/Finished -->
+        <div id="overlay" class="overlay hidden">
+            <!-- Pause Modal -->
+            <div id="pause-modal" class="modal hidden">
+                <h2>暫停</h2>
+                <button id="resume-btn" class="primary-btn">繼續</button>
+            </div>
+
+            <!-- End Game Modal -->
+            <div id="end-modal" class="modal hidden">
+                <h2>🎉 恭喜完成! 🎉</h2>
+                <p>你已經完成了所有關卡！</p>
+                <div class="controls-vertical">
+                    <button id="end-restart-btn" class="primary-btn">重完這一局</button>
+                    <button id="end-newgame-btn" class="control-btn">重新設定新的一局</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
