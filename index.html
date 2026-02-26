@@ -37,7 +37,25 @@
                 </div>
 
                 <div class="setting-group">
-                    <label>圖案庫數量 (2-18)</label>
+                    <label>圖案庫種類</label>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="pool-type" value="animals" checked>
+                            <span>動物</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="pool-type" value="anan1">
+                            <span>安安1</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="pool-type" value="shenren">
+                            <span>神人</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label id="pool-label">圖案庫數量 (2-18)</label>
                     <div class="range-control">
                         <input type="range" id="pool-input" min="2" max="18" value="18" step="1">
                         <span id="pool-display">18 種</span>

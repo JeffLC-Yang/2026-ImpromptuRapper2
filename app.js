@@ -120,6 +120,14 @@ const ANIMALS = [
     '🐔', '🐶', '🐷', '🦆', '🦁', '🐘', '🐱', '🐟', '🐢'
 ];
 
+const ANAN1 = [
+    '船', '床', '張', '詹', '山', '商', '辦', '棒'
+];
+
+const SHENREN = [
+    '真', '蒸', '身', '聲', '人', '仍', '神', '繩'
+];
+
 const SPEEDS = {
     1: 0.5,
     2: 0.4,
@@ -136,6 +144,7 @@ class Game {
             speed: 2,
             totalLevels: 10,
             poolSize: 18,
+            poolType: 'animals',
             complexity: 'random',
             fixedCount: 3
         };
@@ -211,7 +220,10 @@ class Game {
 
     generateLevels() {
         this.data.levels = [];
-        const sessionPool = ANIMALS.slice(0, this.params.poolSize);
+        let sourcePool = ANIMALS;
+        if (this.params.poolType === 'anan1') sourcePool = ANAN1;
+        if (this.params.poolType === 'shenren') sourcePool = SHENREN;
+        const sessionPool = sourcePool.slice(0, this.params.poolSize);
 
         for (let i = 0; i < this.params.totalLevels; i++) {
             let count = 0;
@@ -230,10 +242,11 @@ class Game {
             count = Math.min(count, this.params.poolSize);
             const levelAnimals = this.shuffleArray([...sessionPool]).slice(0, count);
 
-            const grid = [];
-            for (let j = 0; j < 8; j++) {
+            const grid = [...levelAnimals];
+            while (grid.length < 8) {
                 grid.push(levelAnimals[Math.floor(Math.random() * levelAnimals.length)]);
             }
+            this.shuffleArray(grid);
 
             this.data.levels.push({
                 grid: grid,
@@ -402,6 +415,28 @@ class App {
             document.getElementById('pool-display').innerText = `${val} 種`;
         });
 
+        document.getElementsByName('pool-type').forEach(r => {
+            r.addEventListener('change', (e) => {
+                const poolType = e.target.value;
+                const poolInput = document.getElementById('pool-input');
+                const poolLabel = document.getElementById('pool-label');
+
+                let maxPool = 18;
+                if (poolType === 'anan1' || poolType === 'shenren') {
+                    maxPool = 8;
+                    poolLabel.innerText = '圖案庫數量 (2-8)';
+                } else {
+                    poolLabel.innerText = '圖案庫數量 (2-18)';
+                }
+
+                poolInput.max = maxPool;
+                if (parseInt(poolInput.value) > maxPool) {
+                    poolInput.value = maxPool;
+                }
+                poolInput.dispatchEvent(new Event('input'));
+            });
+        });
+
         this.addInputListener('fixed-count-input', (val) => {
             document.getElementById('fixed-count-display').innerText = `${val} 個`;
         });
@@ -472,6 +507,11 @@ class App {
         const totalLevels = parseInt(document.getElementById('levels-input').value);
         const poolSize = parseInt(document.getElementById('pool-input').value);
 
+        let poolType = 'animals';
+        document.getElementsByName('pool-type').forEach(r => {
+            if (r.checked) poolType = r.value;
+        });
+
         let complexity = 'random';
         document.getElementsByName('complexity').forEach(r => {
             if (r.checked) complexity = r.value;
@@ -479,7 +519,7 @@ class App {
 
         const fixedCount = parseInt(document.getElementById('fixed-count-input').value);
 
-        this.game.setParams({ speed, totalLevels, poolSize, complexity, fixedCount });
+        this.game.setParams({ speed, totalLevels, poolSize, poolType, complexity, fixedCount });
 
         document.getElementById('start-screen').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
